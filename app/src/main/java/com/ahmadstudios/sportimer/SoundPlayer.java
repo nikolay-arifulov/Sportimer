@@ -16,8 +16,11 @@ import java.util.Observer;
  * необходимости прекратить воспроизведение звука, в качестве параметра передаётся значение -1
  */
 public class SoundPlayer implements Observer {
+
     private final Context context;
+
     private final SportTimer.Sound sound;
+
     private MediaPlayer mediaPlayer;
 
     public SoundPlayer(Context context, SportTimer.Sound sound) {

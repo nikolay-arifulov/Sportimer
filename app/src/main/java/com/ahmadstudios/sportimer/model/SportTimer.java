@@ -1,10 +1,14 @@
 package com.ahmadstudios.sportimer.model;
 
-import android.os.CountDownTimer;
-
 import com.ahmadstudios.sportimer.R;
 
+import android.os.CountDownTimer;
+
 import java.util.Observable;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * Класс — модель. Последовательно запускает таймеры обратного отсчёта для подхода и отдыха.
@@ -12,13 +16,36 @@ import java.util.Observable;
  * таймера уведомляются подписчики. В классе есть внутренний класс Sound, который уведомляет
  * подписчиков о необходимости воспроизвести звук или прекратить воспроизведение.
  */
+
+@NoArgsConstructor
+@Getter
+@Setter
 public class SportTimer extends Observable {
-    private final Sound sound;
-    private long milliseconds, millisUntilFinished;
-    private int minutesUntilFinished, secondsUntilFinished;
-    private int currentSet, sets;
-    private int workMinutes, workSeconds, restMinutes, restSeconds;
+
+    private final Sound sound = new Sound();
+
+    private long milliseconds;
+
+    private long millisUntilFinished;
+
+    private int minutesUntilFinished;
+
+    private int secondsUntilFinished;
+
+    private int currentSet;
+
+    private int sets;
+
+    private int workMinutes;
+
+    private int workSeconds;
+
+    private int restMinutes;
+
+    private int restSeconds;
+
     private CountDownTimer countDownTimer;
+
     private boolean isWork;
 
     public static class Sound extends Observable {
@@ -33,38 +60,6 @@ public class SportTimer extends Observable {
             notifyObservers(-1);
             clearChanged();
         }
-    }
-
-    public SportTimer() {
-        sound = new Sound();
-    }
-
-    public Sound getSound() {
-        return sound;
-    }
-
-    public long getMilliseconds() {
-        return milliseconds;
-    }
-
-    public long getMillisUntilFinished() {
-        return millisUntilFinished;
-    }
-
-    public int getCurrentSet() {
-        return currentSet;
-    }
-
-    public int getSets() {
-        return sets;
-    }
-
-    public int getMinutesUntilFinished() {
-        return minutesUntilFinished;
-    }
-
-    public int getSecondsUntilFinished() {
-        return secondsUntilFinished;
     }
 
     public void start(int sets, int workMinutes, int workSeconds, int restMinutes, int restSeconds) {
@@ -84,7 +79,7 @@ public class SportTimer extends Observable {
 
     private void startWorkTimer() {
         if (currentSet <= sets) {
-            milliseconds = workMinutes * 60000 + workSeconds * 1000;
+            milliseconds = workMinutes * 60000L + workSeconds * 1000L;
             isWork = true;
             sound.play(R.raw.gong);
 
@@ -104,7 +99,7 @@ public class SportTimer extends Observable {
     }
 
     private void startRestTimer() {
-        milliseconds = restMinutes * 60000 + restSeconds * 1000;
+        milliseconds = restMinutes * 60000L + restSeconds * 1000L;
         isWork = false;
 
         countDownTimer = new CountDownTimer(milliseconds, 10) {
@@ -126,7 +121,11 @@ public class SportTimer extends Observable {
         minutesUntilFinished = (int) millisUntilFinished / 60000;
         secondsUntilFinished = (int) (millisUntilFinished / 1000) % 60;
         this.millisUntilFinished = millisUntilFinished;
-        if (millisUntilFinished < 10200 && millisUntilFinished > 10180) sound.play(R.raw.tick);
+
+        if (millisUntilFinished < 10200 && millisUntilFinished > 10180) {
+            sound.play(R.raw.tick);
+        }
+
         setChanged();
         notifyObservers(isWork);
         clearChanged();

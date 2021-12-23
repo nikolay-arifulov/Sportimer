@@ -6,9 +6,9 @@ import android.os.Bundle;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.ahmadstudios.sportimer.controller.Controller;
+import com.ahmadstudios.sportimer.controller.ControllerImpl;
 import com.ahmadstudios.sportimer.R;
-import com.ahmadstudios.sportimer.controller.IController;
+import com.ahmadstudios.sportimer.controller.Controller;
 import com.ahmadstudios.sportimer.model.SportTimer;
 
 import java.util.Locale;
@@ -22,10 +22,16 @@ import java.util.Observer;
  * оставшегося времени в соответствующем TextView.
  */
 public class TimerActivity extends AppCompatActivity implements Observer, BaseView {
+
     private ProgressBar timerProgressBar;
-    private TextView timerTextView, workRestTextView;
+
+    private TextView timerTextView;
+
+    private TextView workRestTextView;
+
     private SportTimer sportTimer;
-    private IController controller;
+
+    private Controller controller;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +48,10 @@ public class TimerActivity extends AppCompatActivity implements Observer, BaseVi
         timerProgressBar = findViewById(R.id.timerProgressBar);
         timerProgressBar.setRotation(-90f);
 
-        controller = new Controller(this);
-        if (sportTimer != null) sportTimer.addObserver(this);
+        controller = new ControllerImpl(this);
+        if (sportTimer != null) {
+            sportTimer.addObserver(this);
+        }
         controller.start(sets, workMinutes, workSeconds, restMinutes, restSeconds);
     }
 
@@ -62,11 +70,15 @@ public class TimerActivity extends AppCompatActivity implements Observer, BaseVi
         timerProgressBar.setProgress((int) sportTimer.getMillisUntilFinished());
         timerTextView.setText(String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds));
 
-        if ((boolean) isWork)
+        if ((boolean) isWork){
             workRestTextView.setText(String.format(Locale.getDefault(), "%s %d", getResources().getString(R.string.work), currentSet));
-        else workRestTextView.setText(R.string.rest);
+        } else {
+            workRestTextView.setText(R.string.rest);
+        }
 
-        if (currentSet > sportTimer.getSets()) onBackPressed();
+        if (currentSet > sportTimer.getSets()) {
+            onBackPressed();
+        }
     }
 
     @Override

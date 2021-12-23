@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.NumberPicker;
@@ -17,9 +16,13 @@ import com.ahmadstudios.sportimer.R;
  * отображаться сам таймер, в эту активность передаются полученные от пользователя данные.
  */
 public class MainActivity extends AppCompatActivity {
+
     private NumberPicker workMinNumPicker;
+
     private NumberPicker workSecNumPicker;
+
     private NumberPicker restMinNumPicker;
+
     private NumberPicker restSecNumPicker;
 
     @Override
@@ -35,18 +38,16 @@ public class MainActivity extends AppCompatActivity {
         restSecNumPicker = findViewById(R.id.restSecNumPicker);
         setRangesPickers();
 
-        startButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, TimerActivity.class);
-                if (!setsEditText.getText().toString().equals(""))
-                    intent.putExtra("sets", Integer.parseInt(setsEditText.getText().toString()));
-                intent.putExtra("workMinutes", workMinNumPicker.getValue());
-                intent.putExtra("workSeconds", workSecNumPicker.getValue());
-                intent.putExtra("restMinutes", restMinNumPicker.getValue());
-                intent.putExtra("restSeconds", restSecNumPicker.getValue());
-                startActivity(intent);
+        startButton.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, TimerActivity.class);
+            if (!setsEditText.getText().toString().equals("")){
+                intent.putExtra("sets", Integer.parseInt(setsEditText.getText().toString()));
             }
+            intent.putExtra("workMinutes", workMinNumPicker.getValue());
+            intent.putExtra("workSeconds", workSecNumPicker.getValue());
+            intent.putExtra("restMinutes", restMinNumPicker.getValue());
+            intent.putExtra("restSeconds", restSecNumPicker.getValue());
+            startActivity(intent);
         });
     }
 
